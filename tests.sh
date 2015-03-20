@@ -4,6 +4,7 @@
 content=$(curl --silent --get --data-urlencode "values=[1, 2, 3]" http://127.0.0.1:8888/)
 expected="{\"sum\": 6, \"product\": 6}"
 
+# XXX this test will fail when the keys order changes
 if [ "$content" == "$expected" ]; then
     echo "test 00: passed"
 else

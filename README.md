@@ -1,12 +1,12 @@
 To run this example:
 -------------------
 
-    ```
-    $ git clone https://github.com/tchx84/dimagi-example.git
-    $ cd ./dimagi-example
-    $ ./server.py
-    $ ./tests.sh # in a separate terminal
-    ```
+```
+$ git clone https://github.com/tchx84/dimagi-example.git
+$ cd ./dimagi-example
+$ ./server.py
+$ ./tests.sh # in a separate terminal
+```
 
 Things to improve:
 -----------------

@@ -17,13 +17,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 import json
-
 from operator import mul
 from operator import add
-
 from urlparse import parse_qs
 from urlparse import urlparse
-
 from BaseHTTPServer import BaseHTTPRequestHandler
 from BaseHTTPServer import HTTPServer
 
@@ -33,12 +30,11 @@ PORT = 8888
 
 
 class MathEngineHandler(BaseHTTPRequestHandler):
-    """Exercise taken from Dimagi's website
-    http://www.dimagi.com/about/careers/exercises/
-    Web Development, Math Engine."""
+    """Web Development, Math Engine, Exercise taken from Dimagi's website
+    http://www.dimagi.com/about/careers/exercises."""
 
     def do_response_OK(self, response):
-        """ Repond that eveything will be OK."""
+        """ Respond to client with the dictionary and 200 OK."""
 
         self.send_response(200)
         self.send_header("Content-type", "application/json")
@@ -46,44 +42,43 @@ class MathEngineHandler(BaseHTTPRequestHandler):
         self.wfile.write(response)
 
     def do_response_BAD(self):
-        """ Respond that sometimes things go BAD."""
+        """ Respond to client with 400 BAD REQUEST."""
 
         self.send_response(400)
         self.end_headers()
 
     def do_GET(self):
-        """Process input and respond sum and product in JSON format."""
+        """Process values param and respond to the client with a
+        dictionary contaning the sum and product in JSON format."""
 
         try:
-            # extract values from params
+            # Extract values from params
             request_params = parse_qs(urlparse(self.path).query)
             request_raw_values = request_params.get('values', None)
             request_values = json.loads(request_raw_values[0])
 
-            # calculayte sum and product
+            # Calculate sum and product
+            # XXX only non-empty numbers lists are considered valid
             response_sum = reduce(add, request_values)
             response_product = reduce(mul, request_values)
 
-            # dump to JSON so it can be sent back to the client
-            # XXX only non-empty number lists are considered valid
+            # Serialize data in JSON format
             response_data = json.dumps({'sum': response_sum,
                                         'product': response_product})
         except:
             self.do_response_BAD()
         else:
-            print 'DEBUG: %s' % response_data
+            print response_data
             self.do_response_OK(response_data)
 
 
 if __name__ == '__main__':
-    """Start server and keep it running"""
+    """Start server and keep it running."""
 
     server = HTTPServer((ADDRESS, PORT), MathEngineHandler)
-
     try:
         print 'MathEngine is running.'
         server.serve_forever()
     except KeyboardInterrupt:
-        print 'MathEngine has stopped..'
-
+        print 'MathEngine has stopped.'
     server.server_close()
